@@ -27,4 +27,17 @@ describe('02-03-separation-of-concerns routes', () => {
       quantity: 10
     });
   });
+
+  it('gets an order by id', async() => {
+    const res = await request(app)
+      .post('/api/v1/orders')
+      .send({ quantity: 10 });
+
+    const order = res.body;
+
+    const gottenOrder = await request(app)
+      .get(`/api/v1/orders/${order.id}`);
+
+    expect(gottenOrder.body).toEqual(order);
+  });
 });
