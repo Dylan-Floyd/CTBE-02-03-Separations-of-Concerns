@@ -46,4 +46,14 @@ describe('Order model tests', () => {
     const actual = await Order.getById(expected.id);
     expect(actual).toEqual(expected);
   });
+
+  it('updates the quantity in the specified order', async() => {
+    const initial = await Order.insert(10);
+    const expected = {
+      id: initial.id,
+      quantity: 42
+    };
+    const actual = await Order.update(initial.id, 42);
+    expect(actual).toEqual(expected);
+  });
 });
