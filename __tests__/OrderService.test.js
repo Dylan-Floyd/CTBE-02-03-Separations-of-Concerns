@@ -12,6 +12,14 @@ describe('OrderService tests', () => {
     return setup(pool);
   });
 
+  it('creates an Order and sends an SMS', async() => {
+    const order = await createOrder(10);
+    const allOrders = await Order.getAll();
+    expect(order.quantity).toEqual(10);
+    expect(twilioUtil.sendSms).toHaveBeenCalledTimes(1);
+    expect(allOrders).toContainEqual(order);
+  });
+
   it('updates an order quantity and sends an SMS', async() => {
     const initialOrder = await Order.insert(10);
     const expected = new Order({
