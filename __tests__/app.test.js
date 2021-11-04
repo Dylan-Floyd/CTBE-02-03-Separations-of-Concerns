@@ -15,6 +15,14 @@ describe('02-03-separation-of-concerns routes', () => {
     return setup(pool);
   });
 
+  const makePostOrderPromise = () => new Promise((resolve, reject) => {
+    request(app)
+      .post('/api/v1/orders')
+      .send({ quantity: 10 })
+      .then(res => resolve(res.body))
+      .catch(e => reject(e));
+  });
+
   it('creates a new order in our database and sends a text message', async() => {
     expect.assertions(1);
 
@@ -39,5 +47,19 @@ describe('02-03-separation-of-concerns routes', () => {
       .get(`/api/v1/orders/${order.id}`);
 
     expect(gottenOrder.body).toEqual(order);
+  });
+
+  it('gets all orders', async() => {
+    const promises = [
+      makePostOrderPromise(),
+      makePostOrderPromise(),
+      makePostOrderPromise()
+    ];
+    const allOrders = await Promise.all(promises);
+    const { body } = await request(app)
+      .get('/api/v1/orders/');
+
+    expect(body).toEqual(expect.arrayContaining(allOrders));
+    expect(body.length).toEqual(allOrders.length);
   });
 });
