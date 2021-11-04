@@ -15,16 +15,16 @@ describe('02-03-separation-of-concerns routes', () => {
     return setup(pool);
   });
 
-  it('creates a new order in our database and sends a text message', () => {
-    return request(app)
+  it('creates a new order in our database and sends a text message', async() => {
+    expect.assertions(1);
+
+    const res = await request(app)
       .post('/api/v1/orders')
-      .send({ quantity: 10 })
-      .then(res => {
-        // expect(createMessage).toHaveBeenCalledTimes(1);
-        expect(res.body).toEqual({
-          id: '1',
-          quantity: 10
-        });
-      });
+      .send({ quantity: 10 });
+    
+    expect(res.body).toEqual({
+      id: '1',
+      quantity: 10
+    });
   });
 });
