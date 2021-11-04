@@ -74,4 +74,15 @@ describe('02-03-separation-of-concerns routes', () => {
       .send({ quantity: 42 });
     expect(actual).toEqual(expected);
   });
+
+  it('deletes an order by id', async() => {
+    const order = await makePostOrderPromise();
+    const { status } = await request(app)
+      .delete(`/api/v1/orders/${order.id}`);
+    expect(status).toEqual(204);
+
+    const { body: allOrders } = await request(app)
+      .get('/api/v1/orders/');
+    expect(allOrders).toEqual([]);
+  });
 });

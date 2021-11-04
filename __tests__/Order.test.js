@@ -56,4 +56,11 @@ describe('Order model tests', () => {
     const actual = await Order.update(initial.id, 42);
     expect(actual).toEqual(expected);
   });
+
+  it('deletes the specified order from the db', async() => {
+    const initial = await Order.insert(3);
+    await Order.delete(initial.id);
+    const allOrders = await Order.getAll();
+    expect(allOrders).toEqual([]);
+  });
 });
